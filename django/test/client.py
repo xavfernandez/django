@@ -588,9 +588,7 @@ class Client(RequestFactory):
         engine = import_module(settings.SESSION_ENGINE)
         if self.session:
             request.session = self.session
-            uid = self.session.get("_auth_user_id")
-            if uid:
-                request.user = get_user(request)
+            request.user = get_user(request)
         else:
             request.session = engine.SessionStore()
         logout(request)
