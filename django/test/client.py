@@ -8,7 +8,7 @@ from copy import copy
 from io import BytesIO
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout, get_user
 from django.core.handlers.base import BaseHandler
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.signals import (request_started, request_finished,
@@ -586,12 +586,11 @@ class Client(RequestFactory):
         """
         request = HttpRequest()
         engine = import_module(settings.SESSION_ENGINE)
-        UserModel = get_user_model()
         if self.session:
             request.session = self.session
             uid = self.session.get("_auth_user_id")
             if uid:
-                request.user = UserModel._default_manager.get(pk=uid)
+                request.user = get_user(request)
         else:
             request.session = engine.SessionStore()
         logout(request)
